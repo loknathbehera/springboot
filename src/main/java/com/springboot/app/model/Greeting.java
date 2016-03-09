@@ -1,18 +1,16 @@
 package com.springboot.app.model;
 
-import java.math.BigDecimal;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
+@Entity
 public class Greeting {
-	private BigDecimal id;
+
+	@Id
+	@GeneratedValue
+	private Long id;
 	private String text;
-
-	public BigDecimal getId() {
-		return id;
-	}
-
-	public void setId(BigDecimal id) {
-		this.id = id;
-	}
 
 	public String getText() {
 		return text;
@@ -20,6 +18,14 @@ public class Greeting {
 
 	public void setText(String text) {
 		this.text = text;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 }
