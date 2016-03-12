@@ -4,6 +4,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
+/*
+ * The Greeting class is an entity model object.
+ */
+
 @Entity
 public class Greeting {
 
