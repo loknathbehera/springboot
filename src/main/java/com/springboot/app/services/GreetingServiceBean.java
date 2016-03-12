@@ -3,6 +3,9 @@ package com.springboot.app.services;
 import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,12 +26,14 @@ public class GreetingServiceBean implements GreetingService {
 	}
 
 	@Override
+	@Cacheable(value="greeting",key="#id")
 	public Greeting findOne(Long id) {
 		return greetingRepository.findOne(id);
 	}
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+	@CachePut(value="greeting",key="#result.id")
 	public Greeting create(Greeting greeting) {
 
 		if (greeting.getId() != null) {
@@ -40,6 +45,7 @@ public class GreetingServiceBean implements GreetingService {
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+	@CachePut(value="greeting",key="#greeting.id")
 	public Greeting update(Greeting greeting) {
 		Greeting persistetGreeting = findOne(greeting.getId());
 		if (persistetGreeting == null) {
@@ -57,6 +63,7 @@ public class GreetingServiceBean implements GreetingService {
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+	@CacheEvict(value="greeting",key="#id",allEntries=true)
 	public void delete(Long id) {
 
 		Greeting greeting = greetingRepository.findOne(id);
