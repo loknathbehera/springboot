@@ -5,12 +5,14 @@ import java.util.Collection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.springboot.app.model.Greeting;
 import com.springboot.app.services.GreetingService;
 
+@Profile("batch")
 @Component
 public class GreetingBatchBean {
 
@@ -19,7 +21,7 @@ public class GreetingBatchBean {
 
 	Logger log = LoggerFactory.getLogger(this.getClass());
 
-	@Scheduled(cron="0,2 * * * * *")
+	@Scheduled(cron="${batch.Greeting.cronJob}")
 	public void cronJob() {
 
 		log.info("<<<<<<<");
@@ -32,7 +34,7 @@ public class GreetingBatchBean {
 
 	}
 	
-	@Scheduled(initialDelay=5000,fixedRate=10000)
+	@Scheduled(initialDelayString="${batch.Greeting.initialDelay}",fixedRateString="${batch.Greeting.fixedRate}")
 	public void intialDelay(){
 		
 		log.info(">>initial delay");
@@ -52,7 +54,8 @@ public class GreetingBatchBean {
 		
 	}
 	
-	@Scheduled(initialDelay=5000,fixedDelay=10000)
+	@Scheduled(initialDelayString="${batch.Greeting.initialDelay}",fixedDelayString
+			="${batch.Greeting.fixedDelay}")
 	public void fixedDelay(){
 		
 		log.info(">>fixed Delay");
