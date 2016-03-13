@@ -3,8 +3,8 @@ package com.springboot.app.api;
 import java.util.Collection;
 import java.util.concurrent.Future;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import javax.persistence.NoResultException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -21,9 +21,7 @@ import com.springboot.app.services.EmailService;
 import com.springboot.app.services.GreetingService;
 
 @RestController
-public class GreetingController {
-
-	Logger logger = LoggerFactory.getLogger(this.getClass());
+public class GreetingController extends BaseController {
 
 	@Autowired
 	GreetingService greetingService;
@@ -32,41 +30,41 @@ public class GreetingController {
 	EmailService emailService;
 
 	@RequestMapping(value = "api/greetings", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Collection<Greeting>> getGreetings() {
+	public ResponseEntity<Collection<Greeting>> getGreetings() throws Exception {
 
 		Collection<Greeting> greetings = greetingService.findAll();
 		return new ResponseEntity<Collection<Greeting>>(greetings, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "api/greetings/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Greeting> getGreeting(@PathVariable(value = "id") Long id) {
+	public ResponseEntity<Greeting> getGreeting(@PathVariable(value = "id") Long id) throws NoResultException {
 		Greeting greeting = greetingService.findOne(id);
 		if (greeting == null) {
-			return new ResponseEntity<Greeting>(HttpStatus.NOT_FOUND);
+			throw new NoResultException("Not result");
 		}
 		return new ResponseEntity<Greeting>(greeting, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "api/greetings", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Greeting> createGreeting(@RequestBody Greeting greeting) {
+	public ResponseEntity<Greeting> createGreeting(@RequestBody Greeting greeting) throws Exception {
 
 		Greeting savedGreeting = greetingService.create(greeting);
 		return new ResponseEntity<Greeting>(savedGreeting, HttpStatus.CREATED);
 	}
 
 	@RequestMapping(value = "api/greetings/{id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Greeting> updateGreeting(@RequestBody Greeting greeting) {
+	public ResponseEntity<Greeting> updateGreeting(@RequestBody Greeting greeting) throws Exception {
 		Greeting updatedGreeting = greetingService.update(greeting);
 		if (updatedGreeting == null) {
-			return new ResponseEntity<Greeting>(HttpStatus.INTERNAL_SERVER_ERROR);
+			throw new Exception();
 		}
 
 		return new ResponseEntity<Greeting>(updatedGreeting, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "api/greetings/{id}", method = RequestMethod.DELETE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Greeting> deleteGreeting(@PathVariable(value = "id") Long id,
-			@RequestBody Greeting greeting) {
+	public ResponseEntity<Greeting> deleteGreeting(@PathVariable(value = "id") Long id, @RequestBody Greeting greeting)
+			throws Exception {
 
 		greetingService.delete(id);
 
