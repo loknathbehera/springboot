@@ -28,7 +28,7 @@ public class AccountUserDetailsService implements UserDetailsService {
 		Account account = accountService.findByUsername(username);
 
 		if (account == null) {
-			return null;
+			throw new UsernameNotFoundException("Invalid credentials.");
 		} else {
 			Collection<GrantedAuthority> grantedAuthorities = new ArrayList<GrantedAuthority>();
 
