@@ -16,7 +16,7 @@ import com.springboot.app.model.Account;
 import com.springboot.app.model.Role;
 import com.springboot.app.services.AccountService;
 
-@Service
+//@Service
 public class AccountUserDetailsService implements UserDetailsService {
 
 	@Autowired
